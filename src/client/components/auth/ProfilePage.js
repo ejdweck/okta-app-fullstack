@@ -16,7 +16,6 @@ const Container = styled.div`
   padding: 20px;
 
   text-align: left;
-
 `
 
 const Title = styled.h1`
@@ -72,13 +71,11 @@ export default withAuth(
       const { name, email } = this.state
       if (!email) return null
 
-      console.log('auth', this.props.auth)
       return (
         <Container>
           <Title>User Profile</Title>
           <Text>Name: {name}</Text>
           <Text>Email: {email}</Text>
-          <Button className="ant-btn" onClick={() => this.deactivate()}>deactivate</Button>
         </Container>
       )
     }

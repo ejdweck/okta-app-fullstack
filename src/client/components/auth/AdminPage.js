@@ -10,14 +10,24 @@ const AdminCard = styled.div`
   flex-direction: column;
   background: yellow;
   margin: 0 auto;
+  padding: 20px;
+  width: 100%;
+`
+
+const CardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  background: green;
+  margin: 0 auto;
   margin-top: 60px;
   padding: 20px;
-  max-width: 500px;
+  max-width: 800px;
 `
 
 const UserBox = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   background: white;
 `
 
@@ -26,7 +36,10 @@ const Text = styled.span`
   flex-direction: row;
 `
 
-const Button = styled.button``
+const Button = styled.button`
+  margin-left: 10px;
+  margin-right: 10px;
+`
 
 export default withAuth(class Login extends Component {
   constructor (props) {
@@ -39,6 +52,7 @@ export default withAuth(class Login extends Component {
   componentDidMount () {
     this.checkAuthentication()
     this.getAllUsers()
+    this.getAdminGroupUsers()
   }
 
   async getCurrentUser () {
@@ -54,6 +68,15 @@ export default withAuth(class Login extends Component {
     return fetch('/api/get-all-users')
       .then(res => res.json())
       .then(data => this.setState({ allUsers: data }))
+  }
+
+  async getAdminGroupUsers () {
+    const { auth } = this.props
+    const { email } = await auth.getUser()
+
+    return fetch('/api/get-admin-group-members')
+      .then(res => res.json())
+      .then(data => this.setState({ adminUsers: data }))
   }
 
   async checkIsAdminUser () {
@@ -81,7 +104,7 @@ export default withAuth(class Login extends Component {
   }
 
   async deactivate (email) {
-    return fetch('/api/deactivate', {
+    await fetch('/api/deactivate', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -89,41 +112,82 @@ export default withAuth(class Login extends Component {
       },
       body: JSON.stringify({ email }),
     })
-      .then(user => {
-        return location.reload()
-      })
       .catch(err => console.log(err))
+    return window.location.reload('/admin')
+  }
+
+  async addUserToAdminGroup (email) {
+    await fetch('/api/add-user-to-admin-group', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    })
+      .catch(err => console.log(err))
+    return window.location.reload('/admin')
+  }
+
+  async removeUserFromAdminGroup (email) {
+    await fetch('/api/remove-user-from-admin-group', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    })
+      .catch(err => console.log(err))
+    return window.location.reload('/admin')
   }
 
   renderAdminCard () {
-    console.log('this.state', this.state.allUsers)
-    const { allUsers } = this.state
+    const { allUsers, adminUsers } = this.state
     return (
-      <div>
-        {_.map(allUsers, (user) => {
-          return (
-            <UserBox>
-              <Text>
-                {user.profile.login}
-              </Text>
-              <Button className="ant-btn" onClick={() => this.deactivate(user.profile.login)}>deactivate</Button>
-            </UserBox>
-          )
-        })}
-      </div>
+      <CardContainer>
+        All Users
+        <AdminCard>
+          {_.map(allUsers, (user) => {
+            return (
+              <UserBox>
+                <Text>
+                  {user.profile.login}
+                </Text>
+                <div>
+                  <Button className="ant-btn" onClick={() => this.addUserToAdminGroup(user.profile.login)}>add to admin group</Button>
+                  <Button className="ant-btn" onClick={() => this.deactivate(user.profile.login)}>deactivate</Button>
+                </div>
+              </UserBox>
+            )
+          })}
+        </AdminCard>
+
+        Admin Users
+        <AdminCard>
+          {_.map(adminUsers, (user) => {
+            return (
+              <UserBox>
+                <Text>
+                  {user.profile.login}
+                </Text>
+                <div>
+                  <Button className="ant-btn" onClick={() => this.removeUserFromAdminGroup(user.profile.login)}>remove user from admin group</Button>
+                  <Button className="ant-btn" onClick={() => this.deactivate(user.profile.login)}>deactivate</Button>
+                </div>
+              </UserBox>
+            )
+          })}
+        </AdminCard>
+      </CardContainer>
     )
   }
 
   render () {
     const { authenticated, isAdmin } = this.state
     if (authenticated === null) return null
-    console.log('we true', authenticated, isAdmin)
     return isAdmin
-      ? (
-        <AdminCard>
-          {this.renderAdminCard()}
-        </AdminCard>
-        )
+      ? this.renderAdminCard()
       : <Redirect to={{ pathname: '/' }} />
   }
 })

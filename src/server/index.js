@@ -66,6 +66,21 @@ app.get('/api/get-all-users', async (req, res) => {
   res.send(allUsers)
 })
 
+app.get('/api/get-admin-group-members', async (req, res) => {
+  const url = `${client.baseUrl}/api/v1/groups/${ADMIN_GROUP_ID}/users`
+  const request = {
+    method: 'get',
+  }
+
+  const adminUsers = await client.http.http(url, request)
+    .then(resp => resp.text())
+    .catch((err) => {
+      console.error(err)
+    })
+
+  res.send(adminUsers)
+})
+
 /* Create a new User (register). */
 app.post('/api/create', (req, res) => {
   if (!req.body) return res.sendStatus(400)
@@ -99,7 +114,6 @@ app.post('/api/create', (req, res) => {
 })
 
 app.get('/api/user', (req, res) => {
-  // if (!req.body) return res.sendStatus(400)
   const { email } = req.body
 
   oktaClient
@@ -114,48 +128,36 @@ app.get('/api/user', (req, res) => {
     })
 })
 
-app.post('/api/add-user-to-group', (req, res) => {
-  if (!req.body) return res.sendStatus(400)
-
-  const { email } = req.body.email
-
-  return oktaClient
+app.post('/api/add-user-to-admin-group', async (req, res) => {
+  const { email } = req.body
+  await oktaClient
     .getUser(email)
-    .then((user) => {
-      user.addToGroup(ADMIN_GROUP_ID)
-      // oktaClient.removeUserFromGroup('00glrsuxnPnYam8cq5d6', user.id)
-        .then(() => {
-          console.log('User has been removed to group')
-          res.status(201)
-        })
-    })
-})
-
-app.post('/api/remove-user-from-group', (req, res) => {
-  if (!req.body) return res.sendStatus(400)
-
-  const { email } = req.body.email
-
-  return oktaClient
-    .getUser(email)
-    .then((user) => {
-      oktaClient.removeUserFromGroup(ADMIN_GROUP_ID, user.id)
-        .then(() => {
-          console.log('User has been removed to group')
-          res.status(201)
-        })
-    })
+    .then((user) => user.addToGroup(ADMIN_GROUP_ID))
     .catch((err) => {
       res.status(400)
       res.send(err)
     })
+
+  return res.send(201)
 })
 
-app.get('/api/list-group-members', async (req, res) => oktaClient.listGroupMembers(ADMIN_GROUP_ID)
-  .then((members) => {
-    res.status(200)
-    res.send(members)
-  }))
+app.post('/api/remove-user-from-admin-group', async (req, res) => {
+  const { email } = req.body
+  const user = await oktaClient.getUser(email)
+
+  const url = `${client.baseUrl}/api/v1/groups/${ADMIN_GROUP_ID}/users/${user.id}`
+  const request = {
+    method: 'delete',
+  }
+
+  const removeUser = await client.http.http(url, request)
+    .then(resp => resp.text())
+    .catch((err) => {
+      console.error(err)
+    })
+
+  res.send(removeUser)
+})
 
 app.post('/api/deactivate', (req, res) => {
   const { email } = req.body
