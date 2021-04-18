@@ -1,5 +1,4 @@
 const express = require('express')
-const os = require('os')
 
 const app = express()
 const okta = require('@okta/okta-sdk-nodejs')
@@ -15,10 +14,6 @@ const client = new okta.Client({
 
 app.use(express.static('dist'))
 app.use(express.json())
-
-app.get('/api/getUsername', (req, res) => res.send({
-  username: os.userInfo().username,
-}))
 
 app.post('/api/check-admin', async (req, res) => {
   if (!req.body) return res.sendStatus(400)
@@ -47,14 +42,9 @@ app.post('/api/check-admin', async (req, res) => {
 })
 
 app.get('/api/get-all-users', async (req, res) => {
-  console.log(' WE HERE', req.body)
   const url = `${client.baseUrl}/api/v1/users`
   const request = {
     method: 'get',
-  // headers: {
-  // Accept: 'application/xml',
-  // 'Content-Type': 'application/json',
-  // },
   }
 
   const allUsers = await client.http.http(url, request)
@@ -113,19 +103,71 @@ app.post('/api/create', (req, res) => {
     })
 })
 
-app.get('/api/user', (req, res) => {
+app.post('/api/update-last-login', async (req, res) => {
   const { email } = req.body
+  const user = await oktaClient.getUser(email)
+  const newProfileObj = {
+    ...user.profile,
+    last_login: new Date().toString(),
+  }
 
-  oktaClient
-    .getUser(email)
-    .then((user) => {
-      res.status(201)
-      res.send(user)
+  const url = `${client.baseUrl}/api/v1/users/${user.id}`
+  const request = {
+    method: 'post',
+    headers: {
+      Accept: 'application/xml',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ profile: newProfileObj }),
+  }
+
+  const updateProfile = await client.http.http(url, request)
+    .then(resp => resp.text())
+    .catch((err) => {
+      console.error(err)
     })
+  res.send(updateProfile)
+})
+
+app.post('/api/update-coffee-preference', async (req, res) => {
+  const { coffeePreference, email } = req.body
+  const user = await oktaClient.getUser(email)
+  const newProfileObj = {
+    ...user.profile,
+    coffeePreference,
+  }
+
+  const url = `${client.baseUrl}/api/v1/users/${user.id}`
+  const request = {
+    method: 'post',
+    headers: {
+      Accept: 'application/xml',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ profile: newProfileObj }),
+  }
+
+  const updateProfile = await client.http.http(url, request)
+    .then(resp => resp.text())
+    .catch((err) => {
+      console.error(err)
+    })
+  res.send(updateProfile)
+})
+
+app.get('/api/get-user', async (req, res) => {
+  const { email } = req.query
+
+  const user = await oktaClient
+    .getUser(email)
+    // .then((user) => {
+    //   res.status(201)
+    // })
     .catch((err) => {
       res.status(400)
       res.send(err)
     })
+  res.send(user)
 })
 
 app.post('/api/add-user-to-admin-group', async (req, res) => {

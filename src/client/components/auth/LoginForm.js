@@ -70,6 +70,7 @@ export default withAuth(
           this.setState({ error: err.message })
           console.log(err.statusCode + ' error', err)
         })
+      return this.updateUserLastLogin()
     }
 
     handleUsernameChange (e) {
@@ -78,6 +79,18 @@ export default withAuth(
 
     handlePasswordChange (e) {
       this.setState({ password: e.target.value })
+    }
+
+    async updateUserLastLogin () {
+      return fetch('/api/update-last-login', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: this.state.username }),
+      })
+        .catch(err => console.log(err))
     }
 
     render () {
