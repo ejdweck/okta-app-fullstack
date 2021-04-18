@@ -22,9 +22,13 @@ export default withAuth(
   class Navigation extends React.Component {
     constructor (props) {
       super(props)
-      this.state = { authenticated: null }
+      this.state = { authenticated: null, isAdmin: null }
       this.checkAuthentication = this.checkAuthentication.bind(this)
       this.checkAuthentication()
+    }
+
+    componentDidMount () {
+      this.checkIsAdminUser()
     }
 
     componentDidUpdate () {
@@ -51,7 +55,7 @@ export default withAuth(
         body: JSON.stringify({ email }),
       })
       const { isAdmin } = await res.json()
-      return this.setState({ isAdmin })
+      this.setState({ isAdmin })
     }
 
     render () {

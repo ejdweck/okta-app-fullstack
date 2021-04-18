@@ -21,7 +21,6 @@ app.get('/api/getUsername', (req, res) => res.send({
 }))
 
 app.post('/api/check-admin', async (req, res) => {
-  console.log(' WE HERE', req.body)
   if (!req.body) return res.sendStatus(400)
   const url = `${client.baseUrl}/api/v1/groups/${ADMIN_GROUP_ID}/users`
   const request = {
@@ -45,6 +44,26 @@ app.post('/api/check-admin', async (req, res) => {
   } else {
     res.send({ isAdmin: false })
   }
+})
+
+app.get('/api/get-all-users', async (req, res) => {
+  console.log(' WE HERE', req.body)
+  const url = `${client.baseUrl}/api/v1/users`
+  const request = {
+    method: 'get',
+  // headers: {
+  // Accept: 'application/xml',
+  // 'Content-Type': 'application/json',
+  // },
+  }
+
+  const allUsers = await client.http.http(url, request)
+    .then(resp => resp.text())
+    .catch((err) => {
+      console.error(err)
+    })
+
+  res.send(allUsers)
 })
 
 /* Create a new User (register). */
@@ -139,8 +158,6 @@ app.get('/api/list-group-members', async (req, res) => oktaClient.listGroupMembe
   }))
 
 app.post('/api/deactivate', (req, res) => {
-  if (!req.body) return res.sendStatus(400)
-
   const { email } = req.body
   return oktaClient
     .getUser(email)
