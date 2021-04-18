@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { withAuth } from '@okta/okta-react'
-import _ from 'lodash'
-import LoginForm from './LoginForm'
 
 export default withAuth(class Login extends Component {
   constructor (props) {
@@ -14,7 +12,7 @@ export default withAuth(class Login extends Component {
   }
 
   componentDidMount () {
-    return this.checkIsAdminUser() & this.checkAuthentication()
+    return this.checkAuthentication()
   }
 
   async getCurrentUser () {
@@ -27,7 +25,7 @@ export default withAuth(class Login extends Component {
     const { auth } = this.props
     const { email } = await auth.getUser()
 
-    return fetch('/api/check-admin', {
+    const res = await fetch('/api/check-admin', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -35,11 +33,8 @@ export default withAuth(class Login extends Component {
       },
       body: JSON.stringify({ email }),
     })
-      .then((res) => {
-        console.log('res', res)
-        // return window.location('/')
-      })
-      .catch(err => console.log(err))
+    const { isAdmin } = await res.json()
+    return this.setState({ isAdmin })
   }
 
   async checkAuthentication () {
@@ -50,14 +45,16 @@ export default withAuth(class Login extends Component {
   }
 
   render () {
-    // if (this.state.authenticated === null) return null
-    // return this.state.authenticated
-    //   ? 'your authd bro'
-    //   : <Redirect to={{ pathname: '/' }} />
-    return (
-      <div>
-        'hi'
-      </div>
-    )
+    const { authenticated, isAdmin } = this.state
+    if (authenticated === null) return null
+
+    return authenticated
+      ? (isAdmin
+          ? (
+              'your authd bro'
+            )
+          : <Redirect to={{ pathname: '/' }} />
+        )
+      : <Redirect to={{ pathname: '/' }} />
   }
 })

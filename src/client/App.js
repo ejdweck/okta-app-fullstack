@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
-import { SecureRoute, LoginCallback, ImplicitCallback } from '@okta/okta-react'
+import { SecureRoute, ImplicitCallback } from '@okta/okta-react'
 
 import Navigation from './components/shared/Navigation'
 import HomePage from './components/home/HomePage'

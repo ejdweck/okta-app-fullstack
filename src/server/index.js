@@ -14,11 +14,14 @@ const client = new okta.Client({
 })
 
 app.use(express.static('dist'))
+app.use(express.json())
+
 app.get('/api/getUsername', (req, res) => res.send({
   username: os.userInfo().username,
 }))
 
 app.post('/api/check-admin', async (req, res) => {
+  console.log(' WE HERE', req.body)
   if (!req.body) return res.sendStatus(400)
   const url = `${client.baseUrl}/api/v1/groups/${ADMIN_GROUP_ID}/users`
   const request = {
@@ -38,14 +41,10 @@ app.post('/api/check-admin', async (req, res) => {
     })
 
   if (_.includes(adminUsers, email)) {
-    console.log('we IN THERE')
+    return res.send({ isAdmin: true })
+  } else {
+    res.send({ isAdmin: false })
   }
-
-  if (_.includes(adminUsers, 'someemail@me.net')) {
-    console.log('we IN THERE 1')
-  }
-
-  return console.log('these the admins boi', adminUsers)
 })
 
 /* Create a new User (register). */

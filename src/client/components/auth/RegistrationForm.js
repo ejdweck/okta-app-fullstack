@@ -81,7 +81,7 @@ export default withAuth(
 
     handleSubmit (e) {
       e.preventDefault()
-      fetch('/api/users/create', {
+      fetch('/api/create', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
