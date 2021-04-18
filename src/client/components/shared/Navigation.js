@@ -25,9 +25,6 @@ export default withAuth(
       this.state = { authenticated: null, isAdmin: null }
       this.checkAuthentication = this.checkAuthentication.bind(this)
       this.checkAuthentication()
-    }
-
-    componentDidMount () {
       this.checkIsAdminUser()
     }
 
@@ -55,7 +52,7 @@ export default withAuth(
         body: JSON.stringify({ email }),
       })
       const { isAdmin } = await res.json()
-      this.setState({ isAdmin })
+      return this.setState({ isAdmin })
     }
 
     render () {

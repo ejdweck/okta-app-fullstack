@@ -4,6 +4,7 @@ import { withAuth } from '@okta/okta-react'
 
 import styled from 'styled-components'
 import _ from 'lodash'
+import RegistrationForm from './RegistrationForm'
 
 const AdminCard = styled.div`
   display: flex;
@@ -183,11 +184,30 @@ export default withAuth(class Login extends Component {
     )
   }
 
+  renderRegistrationForm () {
+    return (
+      <CardContainer>
+        <AdminCard>
+          <RegistrationForm />
+        </AdminCard>
+      </CardContainer>
+    )
+  }
+
+  renderAdminContent () {
+    return (
+      <>
+        {this.renderAdminCard()}
+        {this.renderRegistrationForm()}
+      </>
+    )
+  }
+
   render () {
     const { authenticated, isAdmin } = this.state
     if (authenticated === null) return null
     return isAdmin
-      ? this.renderAdminCard()
+      ? this.renderAdminContent()
       : <Redirect to={{ pathname: '/' }} />
   }
 })

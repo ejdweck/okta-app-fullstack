@@ -1,8 +1,8 @@
 import React from 'react'
-import OktaAuth from '@okta/okta-auth-js'
-import { withAuth } from '@okta/okta-react'
+// import OktaAuth from '@okta/okta-auth-js'
+// import { withAuth } from '@okta/okta-react'
 
-import config from '../../app.config'
+// import config from '../../app.config'
 
 import styled from 'styled-components'
 import { Input } from 'antd'
@@ -11,14 +11,12 @@ import 'antd/dist/antd.css' // or 'antd/dist/antd.less'
 
 const Container = styled.div`
   justify-content: center;
-  padding: 60px;
   align-items: center;
 `
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  max-width: 300px;
   background: yellow;
   text-align: left;
   margin: 0 auto;
@@ -37,123 +35,111 @@ const StyledButton = styled.button`
 const Label = styled.label`
 `
 
-export default withAuth(
-  class RegistrationForm extends React.Component {
-    constructor (props) {
-      super(props)
-      this.state = {
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        sessionToken: null,
-      }
-      this.oktaAuth = new OktaAuth({ url: config.url })
-      this.checkAuthentication = this.checkAuthentication.bind(this)
-      this.checkAuthentication()
-
-      this.handleSubmit = this.handleSubmit.bind(this)
-      this.handleFirstNameChange = this.handleFirstNameChange.bind(this)
-      this.handleLastNameChange = this.handleLastNameChange.bind(this)
-      this.handleEmailChange = this.handleEmailChange.bind(this)
-      this.handlePasswordChange = this.handlePasswordChange.bind(this)
+export default class RegistrationForm extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      sessionToken: null,
     }
+    // this.oktaAuth = new OktaAuth({ url: config.url })
+    // this.checkAuthentication = this.checkAuthentication.bind(this)
+    // this.checkAuthentication()
 
-    componentDidUpdate () {
-      this.checkAuthentication()
-    }
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleFirstNameChange = this.handleFirstNameChange.bind(this)
+    this.handleLastNameChange = this.handleLastNameChange.bind(this)
+    this.handleEmailChange = this.handleEmailChange.bind(this)
+    this.handlePasswordChange = this.handlePasswordChange.bind(this)
+  }
 
-    handleFirstNameChange (e) {
-      this.setState({ firstName: e.target.value })
-    }
+  // componentDidUpdate () {
+  //   this.checkAuthentication()
+  // }
 
-    handleLastNameChange (e) {
-      this.setState({ lastName: e.target.value })
-    }
+  handleFirstNameChange (e) {
+    this.setState({ firstName: e.target.value })
+  }
 
-    handleEmailChange (e) {
-      this.setState({ email: e.target.value })
-    }
+  handleLastNameChange (e) {
+    this.setState({ lastName: e.target.value })
+  }
 
-    handlePasswordChange (e) {
-      this.setState({ password: e.target.value })
-    }
+  handleEmailChange (e) {
+    this.setState({ email: e.target.value })
+  }
 
-    handleSubmit (e) {
-      e.preventDefault()
-      fetch('/api/create', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(this.state),
-      })
-        .then(user => {
-          this.oktaAuth
-            .signIn({
-              username: this.state.email,
-              password: this.state.password,
-            })
-            .then(res =>
-              this.setState({
-                sessionToken: res.sessionToken,
-              }),
-            )
-        })
-        .catch(err => console.log(err))
-    }
+  handlePasswordChange (e) {
+    this.setState({ password: e.target.value })
+  }
 
-    async checkAuthentication () {
-      const sessionToken = await this.props.auth.getIdToken()
-      if (sessionToken) {
-        this.setState({ sessionToken })
-      }
-    }
+  handleSubmit (e) {
+    e.preventDefault()
+    fetch('/api/create', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(this.state),
+    })
+      .catch(err => console.log(err))
 
-    render () {
-      if (this.state.sessionToken) {
-        this.props.auth.redirect({ sessionToken: this.state.sessionToken })
-        return null
-      }
+    return window.location.reload('/admin')
+  }
 
-      return (
-        <Container>
-          <Form onSubmit={this.handleSubmit}>
-            <Label>Email:</Label>
-            <StyledInput
-              type="email"
-              id="email"
-              value={this.state.email}
-              onChange={this.handleEmailChange}
-            />
-            <Label>First Name:</Label>
-            <StyledInput
-              type="text"
-              id="firstName"
-              value={this.state.firstName}
-              onChange={this.handleFirstNameChange}
-            />
-            <Label>Last Name:</Label>
-            <StyledInput
-              type="text"
-              id="lastName"
-              value={this.state.lastName}
-              onChange={this.handleLastNameChange}
-            />
-            <Label>Password:</Label>
-            <StyledInput
-              type="password"
-              id="password"
-              value={this.state.password}
-              onChange={this.handlePasswordChange}
-            />
-            <StyledButton className="ant-btn" type="submit" id="submit" value="Register">
-              Register
-            </StyledButton>
-          </Form>
-        </Container>
-      )
-    }
-  },
-)
+  // async checkAuthentication () {
+  //   const sessionToken = await this.props.auth.getIdToken()
+  //   if (sessionToken) {
+  //     this.setState({ sessionToken })
+  //   }
+  // }
+
+  render () {
+    // if (this.state.sessionToken) {
+    //   this.props.auth.redirect({ sessionToken: this.state.sessionToken })
+    //   return null
+    // }
+
+    return (
+      <Container>
+        <Form onSubmit={this.handleSubmit}>
+          <Label>Email:</Label>
+          <StyledInput
+            type="email"
+            id="email"
+            value={this.state.email}
+            onChange={this.handleEmailChange}
+          />
+          <Label>First Name:</Label>
+          <StyledInput
+            type="text"
+            id="firstName"
+            value={this.state.firstName}
+            onChange={this.handleFirstNameChange}
+          />
+          <Label>Last Name:</Label>
+          <StyledInput
+            type="text"
+            id="lastName"
+            value={this.state.lastName}
+            onChange={this.handleLastNameChange}
+          />
+          <Label>Password:</Label>
+          <StyledInput
+            type="password"
+            id="password"
+            value={this.state.password}
+            onChange={this.handlePasswordChange}
+          />
+          <StyledButton className="ant-btn" type="submit" id="submit" value="Register">
+            Register
+          </StyledButton>
+        </Form>
+      </Container>
+    )
+  }
+}
