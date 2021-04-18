@@ -1,9 +1,4 @@
 import React from 'react'
-// import OktaAuth from '@okta/okta-auth-js'
-// import { withAuth } from '@okta/okta-react'
-
-// import config from '../../app.config'
-
 import styled from 'styled-components'
 import { Input } from 'antd'
 
@@ -45,20 +40,12 @@ export default class RegistrationForm extends React.Component {
       password: '',
       sessionToken: null,
     }
-    // this.oktaAuth = new OktaAuth({ url: config.url })
-    // this.checkAuthentication = this.checkAuthentication.bind(this)
-    // this.checkAuthentication()
-
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleFirstNameChange = this.handleFirstNameChange.bind(this)
     this.handleLastNameChange = this.handleLastNameChange.bind(this)
     this.handleEmailChange = this.handleEmailChange.bind(this)
     this.handlePasswordChange = this.handlePasswordChange.bind(this)
   }
-
-  // componentDidUpdate () {
-  //   this.checkAuthentication()
-  // }
 
   handleFirstNameChange (e) {
     this.setState({ firstName: e.target.value })
@@ -91,19 +78,7 @@ export default class RegistrationForm extends React.Component {
     return window.location.reload('/admin')
   }
 
-  // async checkAuthentication () {
-  //   const sessionToken = await this.props.auth.getIdToken()
-  //   if (sessionToken) {
-  //     this.setState({ sessionToken })
-  //   }
-  // }
-
   render () {
-    // if (this.state.sessionToken) {
-    //   this.props.auth.redirect({ sessionToken: this.state.sessionToken })
-    //   return null
-    // }
-
     return (
       <Container>
         <Form onSubmit={this.handleSubmit}>
