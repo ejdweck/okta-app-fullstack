@@ -62,7 +62,7 @@ export default withAuth(
     }
 
     async handleUpdateCoffeePreference () {
-      return fetch('/api/update-coffee-preference', {
+      const pref = await fetch('/api/update-coffee-preference', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -73,7 +73,9 @@ export default withAuth(
           coffeePreference: this.state.updateCoffeePreference,
         }),
       })
-        .catch(err => console.log(err))
+        .then(res => res.json())
+
+      console.log('pref', pref)
     }
 
     async getCurrentUser () {

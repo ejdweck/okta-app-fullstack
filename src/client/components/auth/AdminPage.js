@@ -105,16 +105,20 @@ export default withAuth(class Login extends Component {
   }
 
   async deactivate (email) {
-    await fetch('/api/deactivate', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email }),
-    })
-      .catch(err => console.log(err))
-    return window.location.reload('/admin')
+    if (alert(`are you sure you want to deactivate${email}`)) {
+      await fetch('/api/deactivate', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      })
+        .catch(err => console.log(err))
+      console.log('hi')
+      window.location.reload('/admin')
+      console.log('bye')
+    }
   }
 
   async addUserToAdminGroup (email) {
@@ -174,7 +178,6 @@ export default withAuth(class Login extends Component {
                 </Text>
                 <div>
                   <Button className="ant-btn" onClick={() => this.removeUserFromAdminGroup(user.profile.login)}>remove user from admin group</Button>
-                  <Button className="ant-btn" onClick={() => this.deactivate(user.profile.login)}>deactivate</Button>
                 </div>
               </UserBox>
             )

@@ -60,6 +60,10 @@ app.get('/api/get-admin-group-members', async (req, res) => {
   const url = `${client.baseUrl}/api/v1/groups/${ADMIN_GROUP_ID}/users`
   const request = {
     method: 'get',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
   }
 
   const adminUsers = await client.http.http(url, request)
@@ -152,6 +156,7 @@ app.post('/api/update-coffee-preference', async (req, res) => {
     .catch((err) => {
       console.error(err)
     })
+
   res.send(updateProfile)
 })
 
@@ -160,9 +165,6 @@ app.get('/api/get-user', async (req, res) => {
 
   const user = await oktaClient
     .getUser(email)
-    // .then((user) => {
-    //   res.status(201)
-    // })
     .catch((err) => {
       res.status(400)
       res.send(err)
