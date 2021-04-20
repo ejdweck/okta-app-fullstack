@@ -1,8 +1,10 @@
 const express = require('express')
 
 const app = express()
-const okta = require('@okta/okta-sdk-nodejs')
+const path = require('path')
 const _ = require('lodash')
+
+const okta = require('@okta/okta-sdk-nodejs')
 const oktaClient = require('./lib/oktaClient')
 
 const ADMIN_GROUP_ID = '00glrsuxnPnYam8cq5d6'
@@ -217,6 +219,10 @@ app.post('/api/deactivate', (req, res) => {
       res.status(400)
       res.send(err)
     })
+})
+
+app.get('/*', function (req, res) {
+  res.sendFile('index.html', { root: path.join(__dirname, 'public') })
 })
 
 app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`))
