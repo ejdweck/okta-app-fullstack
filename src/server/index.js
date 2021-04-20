@@ -13,7 +13,7 @@ const client = new okta.Client({
   token: '00mWsKm3108tUas2RzR0X79mtV2HM9k7rZATrD2EIL',
   orgUrl: 'https://ejsguitarrentals.okta.com',
 })
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, '../../public')))
 app.use(express.json())
 
 app.post('/api/check-admin', async (req, res) => {
