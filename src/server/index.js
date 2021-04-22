@@ -1,7 +1,6 @@
 const express = require('express')
 
 const app = express()
-const path = require('path')
 const _ = require('lodash')
 
 const okta = require('@okta/okta-sdk-nodejs')
@@ -13,7 +12,8 @@ const client = new okta.Client({
   token: '00mWsKm3108tUas2RzR0X79mtV2HM9k7rZATrD2EIL',
   orgUrl: 'https://ejsguitarrentals.okta.com',
 })
-app.use(express.static(path.join(__dirname, '../../public')))
+
+app.use(express.static('dist'))
 app.use(express.json())
 
 app.post('/api/check-admin', async (req, res) => {
@@ -21,10 +21,10 @@ app.post('/api/check-admin', async (req, res) => {
   const url = `${client.baseUrl}/api/v1/groups/${ADMIN_GROUP_ID}/users`
   const request = {
     method: 'get',
-  // headers: {
-  // Accept: 'application/xml',
-  // 'Content-Type': 'application/json',
-  // },
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
   }
 
   const { email } = req.body
@@ -46,6 +46,10 @@ app.get('/api/get-all-users', async (req, res) => {
   const url = `${client.baseUrl}/api/v1/users`
   const request = {
     method: 'get',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
   }
 
   const allUsers = await client.http.http(url, request)
@@ -146,7 +150,7 @@ app.post('/api/update-coffee-preference', async (req, res) => {
   const request = {
     method: 'post',
     headers: {
-      Accept: 'application/xml',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ profile: newProfileObj }),
@@ -204,24 +208,21 @@ app.post('/api/remove-user-from-admin-group', async (req, res) => {
   res.send(removeUser)
 })
 
-app.post('/api/deactivate', (req, res) => {
+app.post('/api/deactivate', async (req, res) => {
   const { email } = req.body
-  return oktaClient
+  await oktaClient
     .getUser(email)
     .then((user) => {
       user.deactivate()
         .then(() => console.log('User has been deactivated'))
         .then(() => user.delete())
-        .then(() => res.status(204))
     })
     .catch((err) => {
       res.status(400)
       res.send(err)
     })
-})
 
-app.get('/*', function (req, res) {
-  res.sendFile('index.html', { root: path.join(__dirname, 'public') })
+  res.sendStatus(204)
 })
 
 app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`))

@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 const Container = styled.div`
   display: flex;
-  background: yellow;
+  background: white;
 `
 
 const StyledLink = styled(Link)`
@@ -25,7 +25,6 @@ export default withAuth(
       this.state = { authenticated: null, isAdmin: null }
       this.checkAuthentication = this.checkAuthentication.bind(this)
       this.checkAuthentication()
-      this.checkIsAdminUser()
     }
 
     componentDidUpdate () {
@@ -39,25 +38,9 @@ export default withAuth(
       }
     }
 
-    async checkIsAdminUser () {
-      const { auth } = this.props
-      const { email } = await auth.getUser()
-
-      const res = await fetch('/api/check-admin', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      })
-      const { isAdmin } = await res.json()
-      return this.setState({ isAdmin })
-    }
-
     render () {
       const { authenticated, isAdmin } = this.state
-      if (authenticated === null) return null
+      // if (authenticated === null) return null
       const authNav = authenticated
         ? (
           <NavContainer>
@@ -65,7 +48,7 @@ export default withAuth(
               Logout
             </StyledLink>
             <StyledLink to="/profile">User Profile</StyledLink>
-            {isAdmin ? <StyledLink to="/admin">Admin</StyledLink> : null}
+            <StyledLink to="/admin">Admin</StyledLink>
           </NavContainer>
           )
         : (

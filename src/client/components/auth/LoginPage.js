@@ -3,6 +3,27 @@ import { Redirect } from 'react-router-dom'
 import LoginForm from './LoginForm'
 import { withAuth } from '@okta/okta-react'
 
+import styled from 'styled-components'
+
+import backgroundasset from '../../assets/purple.svg'
+
+const Container = styled.div`
+  text-align: center;
+  padding: 60px;
+
+  background-image: url(${backgroundasset});
+  height: 100vh;
+`
+
+const TextContainer = styled.div`
+  padding: 20px;
+  margin: 0 auto;
+  background: white;
+  border: 2px solid #2b2b2b;
+  height: fit-content;
+  width: 400px;
+`
+
 export default withAuth(class Login extends Component {
   constructor (props) {
     super(props)
@@ -25,7 +46,13 @@ export default withAuth(class Login extends Component {
   render () {
     if (this.state.authenticated === null) return null
     return this.state.authenticated
-      ? <Redirect to={{ pathname: '/profile' }} />
-      : <LoginForm baseUrl={this.props.baseUrl} />
+      ? <Redirect to={{ pathname: '/' }} />
+      : (
+        <Container>
+          <TextContainer>
+            <LoginForm baseUrl={this.props.baseUrl} />
+          </TextContainer>
+        </Container>
+        )
   }
 })

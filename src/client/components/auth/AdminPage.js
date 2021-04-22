@@ -105,7 +105,8 @@ export default withAuth(class Login extends Component {
   }
 
   async deactivate (email) {
-    if (alert(`are you sure you want to deactivate${email}`)) {
+    if (confirm(`are you sure you want to deactivate${email}`)) {
+      console.log('here')
       await fetch('/api/deactivate', {
         method: 'POST',
         headers: {
@@ -115,9 +116,7 @@ export default withAuth(class Login extends Component {
         body: JSON.stringify({ email }),
       })
         .catch(err => console.log(err))
-      console.log('hi')
-      window.location.reload('/admin')
-      console.log('bye')
+      return window.location.reload('/admin')
     }
   }
 

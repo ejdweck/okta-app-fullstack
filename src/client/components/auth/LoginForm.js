@@ -9,31 +9,27 @@ import 'antd/dist/antd.css' // or 'antd/dist/antd.less'
 
 const Container = styled.div`
   justify-content: center;
-  padding: 60px;
   align-items: center;
 `
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  max-width: 300px;
-  background: yellow;
   text-align: left;
   margin: 0 auto;
-  padding: 20px;
 `
 
 const StyledInput = styled(Input)`
   max-width: 300px;
+  margin-bottom: 20px;
 `
 
 const StyledButton = styled.button`
-  margin-top: 20px;
+  margin-top: 10px;
   max-width: 100px;
-
 `
 
-const Label = styled.label`
+const Label = styled.h4`
 `
 
 export default withAuth(
@@ -109,6 +105,7 @@ export default withAuth(
         <Container>
           <Form onSubmit={this.handleSubmit}>
             {errorMessage}
+            <h2>Login</h2>
             <Label>Username:</Label>
             <StyledInput
               id="username"

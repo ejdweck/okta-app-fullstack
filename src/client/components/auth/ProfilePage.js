@@ -74,8 +74,7 @@ export default withAuth(
         }),
       })
         .then(res => res.json())
-
-      console.log('pref', pref)
+      return window.location.reload('/profile')
     }
 
     async getCurrentUser () {

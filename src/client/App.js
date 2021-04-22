@@ -16,8 +16,8 @@ import 'antd/dist/antd.css' // or 'antd/dist/antd.less'
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  background: pink;
   height: 100vh;
+  width: 100vw;
 `
 
 export default class App extends Component {

@@ -8,21 +8,26 @@ import styled from 'styled-components'
 import { Input } from 'antd'
 
 import 'antd/dist/antd.css' // or 'antd/dist/antd.less'
+import backgroundasset from '../../assets/purple.svg'
 
 const Container = styled.div`
-  justify-content: center;
   padding: 60px;
-  align-items: center;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+
+  background-image: url(${backgroundasset});
+  height: 100vh;
 `
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  max-width: 300px;
-  background: yellow;
+  background: white;
   text-align: left;
   margin: 0 auto;
-  padding: 20px;
+  height: fit-content;
+  padding: 60px 60px;
 `
 
 const StyledInput = styled(Input)`
