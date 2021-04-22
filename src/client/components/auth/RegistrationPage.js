@@ -23,15 +23,19 @@ const Container = styled.div`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  background: white;
-  text-align: left;
   margin: 0 auto;
+  padding: 40px;
+  width: 400px;
+  text-align: left;
   height: fit-content;
-  padding: 60px 60px;
+  height: fit-content;
+  background: white;
+  border: 2px solid #2b2b2b;
 `
 
 const StyledInput = styled(Input)`
   max-width: 300px;
+  margin-bottom: 20px;
 `
 
 const StyledButton = styled.button`
@@ -39,7 +43,7 @@ const StyledButton = styled.button`
   max-width: 100px;
 `
 
-const Label = styled.label`
+const Label = styled.h4`
 `
 
 export default withAuth(
@@ -125,6 +129,7 @@ export default withAuth(
       return (
         <Container>
           <Form onSubmit={this.handleSubmit}>
+            <h2>Registration</h2>
             <Label>Email:</Label>
             <StyledInput
               type="email"

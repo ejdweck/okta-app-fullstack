@@ -16,7 +16,7 @@ const Container = styled.div`
 `
 
 const TextContainer = styled.div`
-  padding: 20px;
+  padding: 40px;
   margin: 0 auto;
   background: white;
   border: 2px solid #2b2b2b;

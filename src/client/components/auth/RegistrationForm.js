@@ -12,14 +12,18 @@ const Container = styled.div`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  background: yellow;
-  text-align: left;
   margin: 0 auto;
-  padding: 20px;
+  padding: 40px;
+  width: 400px;
+  text-align: left;
+  height: fit-content;
+  height: fit-content;
+  background: white;
 `
 
 const StyledInput = styled(Input)`
   max-width: 300px;
+  margin-bottom: 20px;
 `
 
 const StyledButton = styled.button`
@@ -81,6 +85,7 @@ export default class RegistrationForm extends React.Component {
   render () {
     return (
       <Container>
+        <h2>Register a user</h2>
         <Form onSubmit={this.handleSubmit}>
           <Label>Email:</Label>
           <StyledInput

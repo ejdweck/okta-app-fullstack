@@ -6,23 +6,34 @@ import styled from 'styled-components'
 import _ from 'lodash'
 import RegistrationForm from './RegistrationForm'
 
+import backgroundasset from '../../assets/purple.svg'
+
+const Container = styled.div`
+  text-align: center;
+  padding: 60px;
+
+  background-image: url(${backgroundasset});
+  height: 100vh;
+`
+
 const AdminCard = styled.div`
   display: flex;
   flex-direction: column;
-  background: yellow;
+  background: white;
   margin: 0 auto;
   padding: 20px;
+  max-width: 800px;
   width: 100%;
+  background: white;
+  border: 2px solid #2b2b2b;
+  height: fit-content;
 `
 
 const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background: green;
   margin: 0 auto;
   margin-top: 60px;
-  padding: 20px;
-  max-width: 800px;
 `
 
 const UserBox = styled.div`
@@ -40,6 +51,10 @@ const Text = styled.span`
 const Button = styled.button`
   margin-left: 10px;
   margin-right: 10px;
+`
+
+const Title = styled.h2`
+  margin-top: 20px;
 `
 
 export default withAuth(class Login extends Component {
@@ -150,8 +165,8 @@ export default withAuth(class Login extends Component {
     const { allUsers, adminUsers } = this.state
     return (
       <CardContainer>
-        All Users
         <AdminCard>
+          <Title>All Users</Title>
           {_.map(allUsers, (user) => {
             return (
               <UserBox>
@@ -166,9 +181,8 @@ export default withAuth(class Login extends Component {
             )
           })}
         </AdminCard>
-
-        Admin Users
         <AdminCard>
+          <Title>Admin Group Users</Title>
           {_.map(adminUsers, (user) => {
             return (
               <UserBox>
@@ -188,20 +202,18 @@ export default withAuth(class Login extends Component {
 
   renderRegistrationForm () {
     return (
-      <CardContainer>
-        <AdminCard>
-          <RegistrationForm />
-        </AdminCard>
-      </CardContainer>
+      <AdminCard>
+        <RegistrationForm />
+      </AdminCard>
     )
   }
 
   renderAdminContent () {
     return (
-      <>
+      <Container>
         {this.renderAdminCard()}
         {this.renderRegistrationForm()}
-      </>
+      </Container>
     )
   }
 

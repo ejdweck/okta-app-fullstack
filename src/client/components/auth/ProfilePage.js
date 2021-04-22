@@ -6,23 +6,35 @@ import 'antd/dist/antd.css' // or 'antd/dist/antd.less'
 
 import { Input } from 'antd'
 
+import backgroundasset from '../../assets/yellow.svg'
+
 const Container = styled.div`
+  text-align: center;
+  padding: 60px;
+
+  background-image: url(${backgroundasset});
+  height: 100vh;
+`
+
+const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
-
-  background: yellow;
-  max-width: 800px;
-
   margin: 0 auto;
   margin-top: 60px;
   padding: 20px;
 
   text-align: left;
+
+  background: white;
+  border: 2px solid #2b2b2b;
+  height: fit-content;
+  width: 400px;
 `
 
 const Title = styled.h1``
 
-const Text = styled.span``
+const Text = styled.span`
+`
 
 const Button = styled.button`
   margin-top: 20px;
@@ -37,6 +49,16 @@ const StyledInput = styled(Input)`
 const InputContainer = styled.div`
   display: flex;
   flex-direction: row;
+  margin-top: 20px;
+`
+
+const AttributeRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const Label = styled.h4`
+  min-width: 130px;
 `
 
 export default withAuth(
@@ -110,22 +132,36 @@ export default withAuth(
 
       return (
         <Container>
-          <Title>User Profile</Title>
-          <Text>Name: {name}</Text>
-          <Text>Email: {email}</Text>
-          <Text>Last login: {lastlogin}</Text>
-          <Text>Coffee preference: {coffeePreference}</Text>
+          <ProfileContainer>
+            <Title>User Profile</Title>
+            <AttributeRow>
+              <Label>Name: </Label>
+              <Text>{name}</Text>
+            </AttributeRow>
+            <AttributeRow>
+              <Label>Email: </Label>
+              <Text>{email}</Text>
+            </AttributeRow>
+            <AttributeRow>
+              <Label>Last login: </Label>
+              <Text>{lastlogin}</Text>
+            </AttributeRow>
+            <AttributeRow>
+              <Label>Coffee preference:</Label>
+              <Text>{coffeePreference}</Text>
+            </AttributeRow>
 
-          <InputContainer>
-            <StyledInput
-              id="username"
-              placeholder="Coffee preference?"
-              type="text"
-              value={updateCoffeePreference}
-              onChange={this.handleCoffeePreferenceChange}
-            />
-            <button onClick={() => this.handleUpdateCoffeePreference()}>update</button>
-          </InputContainer>
+            <InputContainer>
+              <StyledInput
+                id="username"
+                placeholder="Coffee preference?"
+                type="text"
+                value={updateCoffeePreference}
+                onChange={this.handleCoffeePreferenceChange}
+              />
+              <button className="ant-btn" onClick={() => this.handleUpdateCoffeePreference()}>update</button>
+            </InputContainer>
+          </ProfileContainer>
         </Container>
       )
     }
